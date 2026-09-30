@@ -1,4 +1,5 @@
 #include "owned_buffer.hpp"
+#include <algorithm> // std::copy
 
 OwnedBuffer::OwnedBuffer(const std::string& line) {
 	n_ = line.size( );

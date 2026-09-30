@@ -3,7 +3,6 @@
 #include <string>   // конструктор из строки и str()
 #include <utility>  // std::move
 #include <vector>   // std::vector<Block>
-#include <algorithm> // std::copy
 
 class OwnedBuffer {
 public:
