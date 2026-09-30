@@ -1,5 +1,6 @@
 #include "owned_buffer.hpp"
 #include <algorithm> // std::copy
+#include <numeric>
 
 OwnedBuffer::OwnedBuffer(const std::string& line) {
 	n_ = line.size( );
@@ -52,9 +53,10 @@ StorageBlocks analyze_blocks(const std::vector<Block>& blocks) {
 		stats.total_blocks = blocks.size( );
 		stats.first_line = blocks.front( ).buf.str( );
 		stats.last_line = blocks.back( ).buf.str( );
-		for (const auto& elem : blocks) {
-			stats.total_bytes += elem.buf.size( );
-		}
+		stats.total_bytes = std::reduce(blocks.begin( ), blocks.end( ), std::size_t(0),
+			[ ](std::size_t sum, const Block& block) {
+				return sum + block.buf.size( );
+			});
 	}
 	return stats;
 }
