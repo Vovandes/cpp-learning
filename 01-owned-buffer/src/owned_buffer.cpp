@@ -38,7 +38,7 @@ std::vector<Block> load(std::istream& in) {
 	while (std::getline(in, line)) {
 		if (!line.empty( )) {
 			Block block;
-			block.line = container.size( ) + 1; // line number starts from 1
+			block.line = container.size( ) + 1; // block number starts from 1
 			block.buf = OwnedBuffer(line);
 			container.push_back(std::move(block));
 		}
@@ -48,11 +48,13 @@ std::vector<Block> load(std::istream& in) {
 
 StorageBlocks analyze_blocks(const std::vector<Block>& blocks) {
 	StorageBlocks stats;
-	stats.total_blocks = blocks.size( );
-	stats.first_line = blocks.front( ).buf.str( );
-	stats.last_line = blocks.back( ).buf.str( );
-	for (const auto& elem : blocks) {
-		stats.total_bytes += elem.buf.size( );
+	if (!blocks.empty( )) {
+		stats.total_blocks = blocks.size( );
+		stats.first_line = blocks.front( ).buf.str( );
+		stats.last_line = blocks.back( ).buf.str( );
+		for (const auto& elem : blocks) {
+			stats.total_bytes += elem.buf.size( );
+		}
 	}
 	return stats;
 }
