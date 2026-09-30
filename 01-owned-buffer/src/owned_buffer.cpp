@@ -48,11 +48,11 @@ std::vector<Block> load(std::istream& in) {
 
 StorageBlocks analyze_blocks(const std::vector<Block>& blocks) {
 	StorageBlocks stats;
+	stats.total_blocks = blocks.size( );
+	stats.first_line = blocks.front( ).buf.str( );
+	stats.last_line = blocks.back( ).buf.str( );
 	for (const auto& elem : blocks) {
-		stats.total_blocks = blocks.size( );
 		stats.total_bytes += elem.buf.size( );
-		stats.first_line = blocks.front( ).buf.str( );
-		stats.last_line = blocks.back( ).buf.str( );
 	}
 	return stats;
 }
