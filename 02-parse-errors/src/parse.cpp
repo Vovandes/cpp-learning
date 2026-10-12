@@ -58,7 +58,6 @@ parse_line(std::string_view line, int line_no) {
 	if (line.empty( )) {
 		return words; // пустая строка без слов — успех, пустой вектор
 	}
-	//===================================================================
 	// поменять код под std::string_view, у него нет ++ придется идти через индексы
 	std::size_t i = 0;
 	while (i < line.size( )) {
@@ -72,6 +71,9 @@ parse_line(std::string_view line, int line_no) {
 		const auto token_start = i;
 		// ищем конец токена: до пробела или конца строки
 		while (i < line.size( ) && line[i] != ' ') {
+			if (std::isalpha(static_cast<unsigned char>(line[i])) && i > token_start) {
+				break;
+			}
 			++i;
 		}
 		const auto token_end = i;
@@ -82,7 +84,6 @@ parse_line(std::string_view line, int line_no) {
 		}
 		words.push_back(result.value( )); // успех: добавляем слово в вектор
 	}
-	//===================================================================
 	return words;
 }
 
@@ -96,17 +97,17 @@ void output_words(const std::vector<Word>& words, int line_number) {
 
 void load_parse(std::istream& in) {
 	std::string line;
-	int line_number{ 1 };
+	int line_number{ 0 };
 	while (std::getline(in, line)) {
-		//++line_number;
+		++line_number;
 		auto result = parse_line(line, line_number);
 		if (!result) {
-			std::cout << std::format("{}: error: {}\n", line_number++, result.error( ).why);
+			std::cout << std::format("{}: error: {}\n", line_number, result.error( ).why);
 			continue; // к следующей строке файла
 		}
 		if (result->empty( )) {
 			continue; // комментарий или пустая строка, не печатать
 		}
-		output_words(*result, line_number++);
+		output_words(*result, line_number);
 	}
 }

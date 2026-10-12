@@ -17,11 +17,9 @@ int main(int argc, char* argv[]) {
             in = &file;
         }
 		load_parse(*in);
-        
-		std::system("pause");
     }
     catch (const std::runtime_error& e) {
-        std::cerr << e.what( ) << '\n';
+        std::cerr << e.what( ) << "\n";
         return 1;
     }
     return 0;
