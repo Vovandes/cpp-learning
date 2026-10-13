@@ -14,7 +14,7 @@
 void open_or_throw(const std::filesystem::path& path, std::ifstream& file) {
 	file.open(path);
 	if (!file.is_open( )) {
-		throw std::runtime_error("cannot open file");
+		throw std::runtime_error("cannot open file: " + path.string( ));
 	}
 }
 
