@@ -10,6 +10,7 @@
 #include <filesystem>   // std::filesystem::path для open_or_throw
 #include <iostream>	    // std::istream для load_parse
 #include <format>       // std::format для вывода ошибок>
+#include <print> 	    // std::print для вывода слов
 
 void open_or_throw(const std::filesystem::path& path, std::ifstream& file) {
 	file.open(path);

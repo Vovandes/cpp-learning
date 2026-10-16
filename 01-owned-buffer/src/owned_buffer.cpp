@@ -39,7 +39,7 @@ std::vector<Block> load(std::istream& in) {
 	while (std::getline(in, line)) {
 		if (!line.empty( )) {
 			Block block;
-			block.line = container.size( ) + 1; // block number starts from 1
+			block.line = static_cast<int>(container.size( ) + 1); // block number starts from 1
 			block.buf = OwnedBuffer(line);
 			container.push_back(std::move(block));
 		}
