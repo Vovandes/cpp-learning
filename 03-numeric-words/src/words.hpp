@@ -25,7 +25,6 @@ struct ParseError {
     std::string message;
 };
 
-// TODO: concept Number: integral или floating_point, но НЕ bool.
 template<typename T>
 concept Number = (std::integral<T> || std::floating_point<T>) && !std::same_as<T, bool>; 
 
@@ -40,13 +39,27 @@ struct Word {
 
 // Шаблон один на все типы. Тело в заголовке: шаблон должен быть виден в точке вызова.
 template<Number T>
-[[nodiscard]] std::expected<T, ParseError> parse_number(std::string_view digits);
+[[nodiscard]] std::expected<T, ParseError> parse_number(std::string_view digits) {
+    if (digits.empty( )) {
+        return std::unexpected(ParseError{ ParseErrorKind::MissingNumber, 0, "missing number" });
+    }
+    T value{};
+    auto [ptr, ec] = std::from_chars(digits.data( ), digits.data( ) + digits.size( ), value);
 
-// TODO: буква -> какой parse_number<...> звать. Две ветки с явными <int> и <double>.
+    if (ec != std::errc{}) {
+        return std::unexpected(ParseError{ ParseErrorKind::BadNumber, 0, "bad number" });
+    }
+    else if (ptr != digits.data( ) + digits.size( )) {
+        return std::unexpected(ParseError{ ParseErrorKind::BadNumber, 0, "bad number" });
+    }
+    else {
+        return value;
+    }
+}
+
 std::expected<Word, ParseError> parse_word(char letter, std::string_view digits);
 
-// TODO: срез комментария, нарезка по букве, parse_word на каждое слово.
-[[nodiscard]] std::expected<std::vector<Word>, ParseError> parse_line(std::string_view line);
+[[nodiscard]] std::expected<std::vector<Word>, ParseError> parse_line(std::string_view line, int line_number);
 
 void output_words(const std::vector<Word>& words, int line_number);
 

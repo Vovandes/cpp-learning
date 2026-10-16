@@ -20,29 +20,9 @@ std::string_view strip_comment(std::string_view line) {
     return line.substr(0, line.find_first_of(";("));
 }
 
-template<Number T>
-[[nodiscard]] std::expected<T, ParseError> parse_number(std::string_view digits) {
-	if (digits.empty( )) {
-		return std::unexpected(ParseError{ ParseErrorKind::MissingNumber, 0, "missing number" });
-	}
-    T value{};
-	auto [ptr, ec] = std::from_chars(digits.data( ), digits.data( ) + digits.size( ), value);
-
-    if (ec != std::errc{}) {
-        return std::unexpected(ParseError{ ParseErrorKind::BadNumber, 0, "bad number" });
-    }
-    else if (ptr != digits.data( ) + digits.size( )) {
-        return std::unexpected(ParseError{ ParseErrorKind::BadNumber, 0, "bad number" });
-    }
-    else {
-        return value;
-    }
-}
-
 std::expected<Word, ParseError> parse_word(char letter, std::string_view digits) {
     if (letter == 'G' || letter == 'N') {
         auto r = parse_number<int>(digits);
-        // TODO: если !r -> вернуть ошибку WrongType, "G wants int" (букву подставь через std::format)
         if (!r) {                        
 			return std::unexpected(ParseError{ ParseErrorKind::WrongType, 0, std::format("{} wants int", letter) });
         }
